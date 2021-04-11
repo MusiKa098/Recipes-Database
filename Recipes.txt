@@ -1,0 +1,190 @@
+mysql> create database Recipes;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| Recipes            |
+| bazar              |
+| blog               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
+| test_app_storage   |
+| testing_system     |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Recipes (
+    -> id INT PRIMARY KEY auto_increment,
+    -> name VARCHAR(25),
+    -> description VARCHAR(100),
+    -> instructions VARCHAR(255)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE Ingredient (
+    -> id INT PRIMARY KEY auto_increment,
+    -> name VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE Measure (
+    -> id INT PRIMARY KEY auto_increment,
+    -> name VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE RecipeIngredient (
+    -> recipe_id INT,
+    -> ingredient_id INT,
+    -> measure_id INT,
+    -> amount INT,
+    -> CONSTRAINT fk_recipe FOREIGN KEY(recipe_id) REFERENCES Recipes(id),
+    -> CONSTRAINT fk_ingredient FOREIGN KEY(ingredient_id) REFERENCES Ingredient(id),
+    -> CONSTRAINT fk_measure FOREIGN KEY(measure_id) REFERENCES Measure(id)
+    -> );
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> show tables;
++-------------------+
+| Tables_in_Recipes |
++-------------------+
+| Ingredient        |
+| Measure           |
+| RecipeIngredient  |
+| Recipes           |
++-------------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO Measure (name) VALUES('CUP'), ('TEASPOON'), ('TABLESPOON');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Ingredient (name) VALUES('egg'), ('salt'), ('sugar'), ('cocoa'), ('flour');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Recipes (name, description, instructions) VALUES (
+    -> 'Fried egg',
+    -> 'One fried egg',
+    -> 'Take one egg, open the egg and fry in a pan and add salt. Cook.');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO Recipes (name, description, instructions) VALUES (
+    -> 'Cake',
+    -> 'Coconut cake',
+    -> 'Add eggs, flour, coconut to pan. Bake at 350 for 1 hour');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO RecipeIngredient (recipe_id, ingredient_id, measure_id, amount) VALUES (1, 1, NULL, 1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO RecipeIngredient (recipe_id, ingredient_id, measure_id, amount)  VALUES (2, 1, NULL, 3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO RecipeIngredient (recipe_id, ingredient_id, measure_id, amount)  VALUES (2, 2, 2, 1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO RecipeIngredient (recipe_id, ingredient_id, measure_id, amount)  VALUES (2, 3, 1, 2);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO RecipeIngredient (recipe_id, ingredient_id, measure_id, amount)  VALUES (2, 4, 1, 1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show tables;
++-------------------+
+| Tables_in_Recipes |
++-------------------+
+| Ingredient        |
+| Measure           |
+| RecipeIngredient  |
+| Recipes           |
++-------------------+
+4 rows in set (0.00 sec)
+
+mysql> DESCRIBE Ingredient;
++-------+--------------+------+-----+---------+----------------+
+| Field | Type         | Null | Key | Default | Extra          |
++-------+--------------+------+-----+---------+----------------+
+| id    | int          | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(100) | YES  |     | NULL    |                |
++-------+--------------+------+-----+---------+----------------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT * FROM Ingredient;
++----+-------+
+| id | name  |
++----+-------+
+|  1 | egg   |
+|  2 | salt  |
+|  3 | sugar |
+|  4 | cocoa |
+|  5 | flour |
++----+-------+
+5 rows in set (0.00 sec)
+
+mysql> DESCRIBE Measure;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int         | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(50) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT * FROM Measure;
++----+------------+
+| id | name       |
++----+------------+
+|  1 | CUP        |
+|  2 | TEASPOON   |
+|  3 | TABLESPOON |
++----+------------+
+3 rows in set (0.00 sec)
+
+mysql> DESCRIBE RecipeIngredient;
++---------------+------+------+-----+---------+-------+
+| Field         | Type | Null | Key | Default | Extra |
++---------------+------+------+-----+---------+-------+
+| recipe_id     | int  | YES  | MUL | NULL    |       |
+| ingredient_id | int  | YES  | MUL | NULL    |       |
+| measure_id    | int  | YES  | MUL | NULL    |       |
+| amount        | int  | YES  |     | NULL    |       |
++---------------+------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM RecipeIngredient;
++-----------+---------------+------------+--------+
+| recipe_id | ingredient_id | measure_id | amount |
++-----------+---------------+------------+--------+
+|         1 |             1 |       NULL |      1 |
+|         2 |             1 |       NULL |      3 |
+|         2 |             2 |          2 |      1 |
+|         2 |             3 |          1 |      2 |
+|         2 |             4 |          1 |      1 |
++-----------+---------------+------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> DESCRIBE Recipes;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| id           | int          | NO   | PRI | NULL    | auto_increment |
+| name         | varchar(25)  | YES  |     | NULL    |                |
+| description  | varchar(100) | YES  |     | NULL    |                |
+| instructions | varchar(255) | YES  |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT * FROM Recipes;
++----+-----------+---------------+-----------------------------------------------------------------+
+| id | name      | description   | instructions                                                    |
++----+-----------+---------------+-----------------------------------------------------------------+
+|  1 | Fried egg | One fried egg | Take one egg, open the egg and fry in a pan and add salt. Cook. |
+|  2 | Cake      | Coconut cake  | Add eggs, flour, coconut to pan. Bake at 350 for 1 hour         |
++----+-----------+---------------+-----------------------------------------------------------------+
+2 rows in set (0.00 sec)
